@@ -12,7 +12,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 
 
-batch_size = 12
+batch_size = 32
 num_classes = 3
 epochs = 8
 img_width = 128
@@ -63,16 +63,17 @@ with tf.device('/gpu:0'):
         MaxPooling2D(2,2),
         Conv2D(32, (3,3), activation = 'relu'),
         MaxPooling2D(2,2),
-        Conv2D(32, (3,3), activation = 'relu'),
+        Conv2D(64, (3,3), activation = 'relu'),
         MaxPooling2D(2,2),
         Flatten(), # flatten multidimensional outputs into single dimension for input to dense fully connected layers
-        Dense(512, activation = 'relu'),
+        Dense(512, activation = 'relu'), #Hidden layers
         Dropout(0.2),
         Dense(num_classes, activation = 'softmax')
     ])
 
     model.compile(loss='sparse_categorical_crossentropy',
-                  optimizer=Adam(),
+                  optimizer=Adam(learning_rate=0.0001),
+                # optimizer = tf.keras.optimizers.SGD(learning_rate=0.01, momentum=0.9),
                   metrics=['accuracy'])
     
     #earlystop_callback = tf.keras.callbacks.EarlyStopping(monitor='val_loss',patience=5)
